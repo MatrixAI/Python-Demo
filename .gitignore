@@ -1,6 +1,7 @@
 /.env
 /result
 /result-*
+/pip_packages
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
