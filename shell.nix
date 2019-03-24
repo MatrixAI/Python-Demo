@@ -16,7 +16,7 @@
         # extra pip packages
         unset SOURCE_DATE_EPOCH
         export PIP_PREFIX="$(pwd)/pip_packages"
-        PIP_INSTALL_DIR="$PIP_PREFIX/lib/python${python.majorVersion}/site-packages"
+        PIP_INSTALL_DIR="$PIP_PREFIX/lib/python${python.pythonVersion}/site-packages"
         export PYTHONPATH="$PIP_INSTALL_DIR:$PYTHONPATH"
         export PATH="$PIP_PREFIX/bin:$PATH"
         mkdir --parents "$PIP_INSTALL_DIR"

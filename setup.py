@@ -14,5 +14,5 @@ setup(
     long_description=long_description,
     url='https://awesome-package.git',
     packages=find_packages(),
-    scripts=['awesome-script'],
+    scripts=['bin/awesome-script'],
     install_requires=['numpy'])
