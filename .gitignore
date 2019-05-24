@@ -1,6 +1,7 @@
-/.env
-/result
-/result-*
+/.env*
+/!.env.example
+/result*
+/tmp
 /pip_packages
 
 # Byte-compiled / optimized / DLL files

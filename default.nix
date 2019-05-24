@@ -7,7 +7,7 @@
     python = lib.getAttrFromPath (lib.splitString "." pythonPath) pkgs;
   in
     python.pkgs.buildPythonApplication {
-      pname = "awesome-package";
+      pname = "python-demo";
       version = "0.0.1";
       src = lib.cleanSourceWith {
         filter = (path: type:
@@ -20,10 +20,22 @@
         );
         src = lib.cleanSource ./.;
       };
+      nativeBuildInputs = [
+        makeWrapper
+      ];
       propagatedBuildInputs = (with python.pkgs; [
         numpy
       ]);
       checkInputs = (with python.pkgs; [
         pytest
       ]);
+      checkPhase = ''
+        pytest --capture=no tests --verbose
+      '';
+      postFixup = ''
+        wrapProgram $out/bin/python-demo-external \
+        --set PATH ${lib.makeBinPath [
+          coreutils
+        ]}
+      '';
     }
