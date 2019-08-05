@@ -1,6 +1,6 @@
 {
   pkgs ? import ./pkgs.nix,
-  pythonPath ? "python36"
+  pythonPath ? "python37"
 }:
   with pkgs;
   let

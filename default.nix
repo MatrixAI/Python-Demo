@@ -1,25 +1,20 @@
 {
   pkgs ? import ./pkgs.nix,
-  pythonPath ? "python36"
+  pythonPath ? "python37",
+  application ? false
 }:
   with pkgs;
   let
     python = lib.getAttrFromPath (lib.splitString "." pythonPath) pkgs;
+    build =
+      if application
+      then python.pkgs.buildPythonApplication
+      else python.pkgs.buildPythonPackage;
   in
-    python.pkgs.buildPythonApplication {
+    build {
       pname = "python-demo";
       version = "0.0.1";
-      src = lib.cleanSourceWith {
-        filter = (path: type:
-          ! (builtins.any
-              (r: (builtins.match r (builtins.baseNameOf path)) != null)
-              [
-                "pip_packages"
-                ".*\.egg-info"
-              ])
-        );
-        src = lib.cleanSource ./.;
-      };
+      src = nix-gitignore.gitignoreSource [] ./.;
       nativeBuildInputs = [
         makeWrapper
       ];
