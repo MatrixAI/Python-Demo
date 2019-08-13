@@ -1,6 +1,6 @@
 {
   pkgs ? import ./pkgs.nix,
-  pythonPath ? "python36"
+  pythonPath ? "python37"
 }:
   with pkgs;
   let
@@ -9,13 +9,20 @@
     let
       drvs = import ./default.nix { inherit pkgs pythonPath; };
       overrideDrv = drvName: drv:
-        drv.overrideAttrs (attrs: {
+        drv.overridePythonAttrs (attrs: {
           src = null;
-          buildInputs =
-            (if drvName == "gpu" then [ cudatoolkit ] else []) ++
-            attrs.buildInputs;
+          nativeBuildInputs = [
+            python.pkgs.pip 
+          ]
+          ++ (if drvName == "gpu" then [ cudatoolkit ] else [])
+          ++ (lib.attrByPath [ "nativeBuildInputs" ] [] attrs);
+          # tests are disabled during nix-build, but we want the checkInputs in shell.nix
+          doCheck = true;
           shellHook = ''
             echo 'Entering ${attrs.pname}'
+            set -o allexport
+            . ./.env
+            set +o allexport
             set -v
 
             # extra pip packages
