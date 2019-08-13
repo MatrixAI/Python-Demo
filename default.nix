@@ -1,6 +1,7 @@
 {
   pkgs ? import ./pkgs.nix,
-  pythonPath ? "python36"
+  pythonPath ? "python37",
+  application ? false
 }:
   let
     pkgs_ = import ./overrides.nix { inherit pkgs pythonPath; };
@@ -8,26 +9,20 @@
     with pkgs_;
     let
       python = lib.getAttrFromPath (lib.splitString "." pythonPath) pkgs_;
+      build =
+        if application
+        then python.pkgs.buildPythonApplication
+        else python.pkgs.buildPythonPackage;
     in
       let
-        drv = { GPU_USE }: python.pkgs.buildPythonApplication rec {
+        drv = { GPU_USE }: build rec {
           # GPU_USE is not intended for production use
           # it is a build-time parameter, that can be configured during development
           inherit GPU_USE;
           pname = "awesome-package";
           version = "0.0.1";
-          src = lib.cleanSourceWith {
-            filter = (path: type:
-              ! (builtins.any
-                  (r: (builtins.match r (builtins.baseNameOf path)) != null)
-                  [
-                    "pip_packages"
-                    ".*\.egg-info"
-                  ])
-            );
-            src = lib.cleanSource ./.;
-          };
-          buildInputs = [
+          src = nix-gitignore.gitignoreSource [] ./.;
+          nativeBuildInputs = [
             makeWrapper
           ];
           propagatedBuildInputs = (with python.pkgs; [
@@ -66,7 +61,7 @@
         };
       in
         {
-          cpu = (drv { GPU_USE = "false"; }).overrideAttrs (attrs:
+          cpu = (drv { GPU_USE = "false"; }).overridePythonAttrs (attrs:
             {
               pname = "${attrs.pname}-cpu";
               propagatedBuildInputs =
@@ -75,7 +70,7 @@
                 ] ++ attrs.propagatedBuildInputs;
             }
           );
-          gpu = (drv { GPU_USE = "true"; }).overrideAttrs (attrs:
+          gpu = (drv { GPU_USE = "true"; }).overridePythonAttrs (attrs:
             {
               pname = "${attrs.pname}-gpu";
               propagatedBuildInputs =
