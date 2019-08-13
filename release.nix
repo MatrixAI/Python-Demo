@@ -4,14 +4,32 @@
 }:
   with pkgs;
   let
-    drv = import ./default.nix { inherit pkgs pythonPath; application = true; };
+    drvs = import ./default.nix { inherit pkgs pythonPath; application = true; };
   in
     {
-      docker = dockerTools.buildImage {
-        name = drv.pname;
-        contents = drv;
+      docker-cpu = dockerTools.buildImage {
+        name = drvs.cpu.pname;
+        contents = drvs.cpu;
+        runAsRoot = ''
+          #!${runtimeShell}
+          mkdir /tmp
+          chmod 1777 /tmp
+        '';
+      };
+      docker-gpu = dockerTools.buildImage {
+        name = drvs.gpu.pname;
+        contents = drvs.gpu;
+        runAsRoot = ''
+          #!${runtimeSHell}
+          mkdir /tmp
+          chmod 1777 /tmp
+        '';
         config = {
-          Cmd = [];
+          Env = [
+            "NVIDIA_DRIVER_CAPABILITIES=compute"
+            "NVIDIA_VISIBLE_DEVICES=all"
+            "LD_LIBRARY_PATH=/usr/lib64"
+          ];
         };
       };
     }
