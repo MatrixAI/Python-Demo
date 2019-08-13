@@ -3,6 +3,7 @@ include LICENSE
 include requirements.txt
 include pkgs.nix
 include default.nix
+include release.nix
 include shell.nix
 
 graft tests
