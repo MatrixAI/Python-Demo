@@ -1,23 +1,23 @@
-{
-  pkgs ? import ./pkgs.nix,
-  pythonPath ? "python37"
-}:
-  with pkgs;
-  let
-    drv = import ./default.nix { inherit pkgs pythonPath; application = true; };
-  in
-    {
-      docker = dockerTools.buildImage {
-        name = drv.pname;
-        contents = drv;
-        runAsRoot = ''
-          #!${runtimeShell}
-          mkdir -p /tmp
-          chmod 1777 /tmp
-          ln -f -s ${bash}/bin/bash /bin/sh
-        '';
-        config = {
-          Cmd = [ "/bin/python-demo-external" ];
-        };
+{ pkgs ? import ./pkgs.nix }:
+
+with pkgs;
+let
+  python = python37;
+in
+  rec {
+    library = python.pkgs.callPackage ./default.nix {};
+    application = python.pkgs.toPythonApplication library;
+    docker = dockerTools.buildImage {
+      name = application.name;
+      contents = application;
+      runAsRoot = ''
+        #!${runtimeShell}
+        mkdir -p /tmp
+        chmod 1777 /tmp
+        ln -f -s ${bash}/bin/bash /bin/sh
+      '';
+      config = {
+        Cmd = [ "/bin/python-demo-external" ];
       };
-    }
+    };
+  }
