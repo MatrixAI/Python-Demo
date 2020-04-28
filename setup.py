@@ -25,4 +25,5 @@ setup(
     scripts=["bin/python-demo", "bin/python-demo-external"],
     setup_requires=pytest_runner,
     install_requires=["numpy"],
+    tests_require=["pytest"],
 )
