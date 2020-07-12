@@ -9,12 +9,9 @@ in
     application = python.pkgs.toPythonApplication library;
     docker = dockerTools.buildImage {
       name = application.name;
-      contents = application;
-      runAsRoot = ''
-        #!${runtimeShell}
-        mkdir -p /tmp
-        chmod 1777 /tmp
-        ln -f -s ${bash}/bin/bash /bin/sh
+      contents = [ application bash ];
+      extraCommands = ''
+        mkdir -m 1777 tmp
       '';
       config = {
         Cmd = [ "/bin/python-demo-external" ];

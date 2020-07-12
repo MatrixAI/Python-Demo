@@ -4,7 +4,6 @@ import subprocess
 
 
 def main():
-    # these require coreutils
     subprocess.call(["ls"])
     subprocess.call(["echo hello"], shell=True)
 

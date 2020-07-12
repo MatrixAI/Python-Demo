@@ -1,5 +1,7 @@
 # Python Demo
 
+[![pipeline status](https://gitlab.com/MatrixAI/Python-Demo/badges/master/pipeline.svg)](https://gitlab.com/MatrixAI/Python-Demo/commits/master)
+
 ## Installation
 
 Building the package (as a library):
