@@ -1,6 +1,6 @@
 # Python Demo
 
-[![pipeline status](https://gitlab.com/MatrixAI/Python-Demo/badges/master/pipeline.svg)](https://gitlab.com/MatrixAI/Python-Demo/commits/master)
+[![pipeline status](https://gitlab.com/MatrixAI/open-source/Python-Demo/badges/master/pipeline.svg)](https://gitlab.com/MatrixAI/open-source/Python-Demo/commits/master)
 
 ## Installation
 
