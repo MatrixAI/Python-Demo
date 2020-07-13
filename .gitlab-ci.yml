@@ -7,57 +7,21 @@ stages:
 
 black:
   stage: check
-  image: python:3.7
-  variables:
-    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - .cache/pip
-      - .venv/
+  image: nixos/nix:2.3
   script:
-    - python -V
-    - pip install virtualenv
-    - virtualenv .venv
-    - source .venv/bin/activate
-    - pip install black
-    - black --check --diff .
+    - nix-shell --packages python3Packages.black --run 'black --check --diff .'
 
 flake8:
   stage: check
-  image: python:3.7
-  variables:
-    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - .cache/pip
-      - .venv/
+  image: nixos/nix:2.3
   script:
-    - python -V
-    - pip install virtualenv
-    - virtualenv .venv
-    - source .venv/bin/activate
-    - pip install flake8
-    - flake8 .
+    - nix-shell --packages python3Packages.flake8 --run 'flake8 .'
 
 mypy:
   stage: check
-  image: python:3.7
-  variables:
-    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - .cache/pip
-      - .venv/
+  image: nixos/nix:2.3
   script:
-    - python -V
-    - pip install virtualenv
-    - virtualenv .venv
-    - source .venv/bin/activate
-    - pip install mypy
-    - mypy --show-error-context --show-column-numbers .
+    - nix-shell --packages python3Packages.mypy --run 'mypy --show-error-context --show-column-numbers .'
 
 nix-dry:
   stage: check
