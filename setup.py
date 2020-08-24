@@ -22,7 +22,7 @@ setup(
     long_description=long_description,
     url="https://github.com/MatrixAI/Python-Demo.git",
     packages=find_packages(),
-    scripts=["bin/python-demo", "bin/python-demo-external"],
+    entry_points={"console_scripts": ["python-demo=python_demo.__main__:main"]},
     setup_requires=pytest_runner,
     install_requires=["numpy"],
     tests_require=["pytest"],
