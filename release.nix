@@ -9,12 +9,12 @@ in
     application = python.pkgs.toPythonApplication library;
     docker = dockerTools.buildImage {
       name = application.name;
-      contents = [ application bash ];
+      contents = [ application ];
       extraCommands = ''
         mkdir -m 1777 tmp
       '';
       config = {
-        Cmd = [ "/bin/python-demo-external" ];
+        Cmd = [ "/bin/python-demo" ];
       };
     };
   }
