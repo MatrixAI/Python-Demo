@@ -9,9 +9,3 @@ trim_trailing_whitespace = true
 
 [*.py]
 indent_size = 4
-
-[bin/python-demo]
-indent_size = 4
-
-[bin/python-demo-external]
-indent_size = 4
